@@ -1,8 +1,6 @@
 # Reframe HPC 
 
 ## Site configuration 
-![Site Config](image-1.png)
-
 + done in config files 
 + 2 Sections for every Site required 
 + Configuring the Systems
