@@ -10,17 +10,30 @@ class HelloTest(rfm.RegressionTest):
         self.valid_prog_environs = ['*']
         self.sourcepath = 'hello_world.c'
         #self.build_system.cflags = ['-O3', omp_flag]
-    
+
     @sanity_function
     def validate_hello(self):
         return sn.assert_found(r'Hello', self.stdout)
     
 
-    @performance_function('words')
-    def validate_wc(self):
-        return sn.extractsingle(r'Hello World contains (\S+)', self.stdout, 1, int)
+    # @performance_function('words')
+    # def validate_wc(self):
+    #     return sn.extractsingle(r'Hello World contains (\S+)', self.stdout, 1, int)
 
-
+    
+    @run_before('performance')
+    def validate(self):
+        self.perf_patterns = {
+            'wordcount': sn.extractsingle(r'Hello World contains (\S+)', self.stdout, 1, int),
+            'duriation': sn.extractsingle(r'Execution time: (\S+)',self.stdout, 1, float)
+        }
+        self.reference = {
+            'baseline_system:default': {
+                'duration': (1.2e-05, -1.5, 1.5, None),
+                'wordcount': (2, 0, 0, None) 
+            }
+        }
+        
 
 
 # class build_hello(rfm.CompileOnlyRegressionTest):
